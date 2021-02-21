@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "AskerViewController.h"
 
-@interface LabelMoverViewController : UIViewController <AskerViewControllerDelegate>
+@interface LabelMoverViewController : UIViewController <AskerViewControllerDelegate, UIActionSheetDelegate>
 {
 @private
     IBOutlet UILabel *myLabel;
+    NSTimer *marqueeTimer;
 }
 
 @property (retain) IBOutlet UILabel *myLabel;
