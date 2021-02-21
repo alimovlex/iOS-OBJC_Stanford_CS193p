@@ -12,16 +12,34 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HappinessViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="redraw" id="8bC-Xf-vdC" customClass="FaceView">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="umc-Hg-gPX" customClass="FaceView">
+                                <rect key="frame" x="16" y="20" width="288" height="205"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="UjT-PL-Ibm">
+                                <rect key="frame" x="14" y="282" width="292" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="happinessChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="PNw-Aq-9Sd"/>
+                                </connections>
+                            </slider>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="faceView" destination="umc-Hg-gPX" id="A9L-ao-BHH"/>
+                        <outlet property="slider" destination="UjT-PL-Ibm" id="7aT-T3-8aO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-57" y="93"/>
+            <point key="canvasLocation" x="-58.125" y="92.5"/>
         </scene>
     </scenes>
 </document>

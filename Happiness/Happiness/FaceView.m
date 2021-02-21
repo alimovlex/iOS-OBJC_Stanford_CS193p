@@ -41,6 +41,9 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGContextSetLineWidth(context, 5.0);
+    [[UIColor blueColor] setStroke];
+    
     [self drawCircleAtPoint:midPoint withRadius:size inContext:context];
     
 #define EYE_H 0.35
@@ -68,7 +71,12 @@
     CGPoint mouthCP2 = mouthEnd;
     mouthCP2.x -= MOUTH_H * size * 2/3;
     
-    CGFloat smileOffset = MOUTH_SMILE * size; // * [self.delegate smileForFaceView:self];
+    // use delegate here to get smile
+
+    float smile = [self.delegate smileForFaceView:self];
+    if (smile < -1.0) smile = -1.0;
+    if (smile > 1.0) smile = 1.0;
+    CGFloat smileOffset = MOUTH_SMILE * size * smile;
     mouthCP1.y += smileOffset;
     mouthCP2.y += smileOffset;
     

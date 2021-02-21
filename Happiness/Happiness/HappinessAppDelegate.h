@@ -10,12 +10,12 @@
 
 @class HappinessViewController;
 
-@interface HappinessAppDelegate : UIResponder <UIApplicationDelegate> {
+@interface HappinessAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     HappinessViewController *viewController;
 }
 
-@property (strong, nonatomic) IBOutlet UIWindow *window;
-@property (strong, nonatomic) IBOutlet HappinessViewController *viewController;
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet HappinessViewController *viewController;
 
 @end
