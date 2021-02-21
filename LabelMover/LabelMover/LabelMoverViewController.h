@@ -9,14 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "AskerViewController.h"
 
-@interface LabelMoverViewController : UIViewController <AskerViewControllerDelegate, UIActionSheetDelegate>
+@interface LabelMoverViewController : UIViewController <AskerViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
 @private
     IBOutlet UILabel *myLabel;
     NSTimer *marqueeTimer;
+    AVAudioPlayer *audio;
 }
 
 @property (retain) IBOutlet UILabel *myLabel;
+@property (retain) UIImage *backgroundImage;
+
+@property (retain) AVAudioPlayer *audio;
 
 @end
 

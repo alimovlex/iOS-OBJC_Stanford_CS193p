@@ -8,10 +8,12 @@
 
 #import "LabelMoverViewController.h"
 #import <CoreMotion/CoreMotion.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation LabelMoverViewController
 
 @synthesize myLabel;
+@synthesize audio;
 
 - (CMMotionManager *)motionManager
 {
@@ -64,12 +66,46 @@
 - (void)viewDidLoad
 {
     UISwipeGestureRecognizer *swipegr = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipe)];
+    swipegr.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipegr];
     //[swipegr release];
     
     UITapGestureRecognizer *tapgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapgr];
     //[tapgr release];
+
+    UISwipeGestureRecognizer *swipeupgr = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeup)];
+    swipeupgr.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeupgr];
+    //[swipeupgr release];
+}
+
+- (void)swipeup
+{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    }
+    picker.allowsEditing = YES;
+    [self presentModalViewController:picker animated:YES];
+    //[picker release];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    if (!image) image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (image)
+    {
+        self.backgroundImage = image;
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        NSDictionary *metadata = [info objectForKey:UIImagePickerControllerMediaMetadata];
+        [library writeImageToSavedPhotosAlbum:[image CGImage] metadata:metadata completionBlock:nil];
+    }
+    
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)moveLabel:(UILabel *)label toPoint:(CGPoint)p
@@ -108,7 +144,7 @@ static NSDictionary *colors = nil;
 
 - (void)changeColor
 {
-    if (!colors) colors = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor blueColor], @"Blue", [UIColor greenColor], @"Green", [UIColor redColor], @"Red", nil];
+    if (!colors) colors = [[NSDictionary alloc] initWithObjectsAndKeys:[UIColor whiteColor], @"White", [UIColor greenColor], @"Green", [UIColor redColor], @"Red", nil];
     
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Change Color" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Clear Color" otherButtonTitles:nil];
     [colors enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
@@ -136,6 +172,7 @@ static NSDictionary *colors = nil;
             [self changeColor];
         } else {
             [self moveLabel:self.myLabel toPoint:tapPoint];
+            [audio play];
         }
     }
 }
@@ -151,13 +188,42 @@ static NSDictionary *colors = nil;
     //[asker release];
 }
 
-- (void)askerViewController:(AskerViewController *)sender didAskQuestion:(NSString *)question andGotAnswer:(NSString *)answer
+- (void)askerViewController:(AskerViewController *)sender
+             didAskQuestion:(NSString *)question
+               andGotAnswer:(NSString *)answer
+                  withAudio:(AVAudioPlayer *)answerAudio
 {
     self.myLabel.text = answer;
+    self.audio = answerAudio;
     CGPoint labelCenter = self.myLabel.center;
     [self.myLabel sizeToFit];
     self.myLabel.center = labelCenter;
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (UIImageView *)backgroundImageView
+{
+    if ([[self.view.subviews objectAtIndex:0] isKindOfClass:[UIImageView class]]) {
+        return (UIImageView *)[self.view.subviews objectAtIndex:0];
+    } else {
+        return nil;
+    }
+}
+
+- (void)setBackgroundImage:(UIImage *)image
+{
+    UIImageView *backgroundImageView = self.backgroundImageView;
+    if (!backgroundImageView) {
+        backgroundImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        [self.view insertSubview:backgroundImageView atIndex:0];
+        //[backgroundImageView release];
+    }
+    backgroundImageView.image = image;
+}
+        
+- (UIImage *)backgroundImage
+{
+    return self.backgroundImageView.image;
 }
 
 - (void)viewDidUnload {

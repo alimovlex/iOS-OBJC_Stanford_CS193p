@@ -38,9 +38,31 @@
     }
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
+// - (void)textFieldDidEndEditing:(UITextField *)textField
+- (IBAction)done
 {
-    [self.delegate askerViewController:self didAskQuestion:self.questionLabel.text andGotAnswer:self.answerField.text];
+    if (self.answerField.text.length > 0) {
+        [self.delegate askerViewController:self
+                            didAskQuestion:self.questionLabel.text
+                              andGotAnswer:self.answerField.text
+                                 withAudio:player];
+    }
+}
+
+- (IBAction)record
+{
+    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSURL *recordURL = [NSURL URLWithString:[cacheDirectory stringByAppendingPathComponent:@"AnswerRecording.aif"]];
+    
+    if (recorder.recording) {
+        [recorder stop];
+        //[player release];
+        player = [[AVAudioPlayer alloc] initWithContentsOfURL:recordURL error:NULL];
+        [player play];
+    } else {
+        if (!recorder) recorder = [[AVAudioRecorder alloc] initWithURL:recordURL settings:nil error:NULL];
+        [recorder record];
+    }
 }
 
 - (void)viewDidUnload {

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @protocol AskerViewControllerDelegate;
 
@@ -17,6 +18,8 @@
     IBOutlet UILabel *questionLabel;
     IBOutlet UITextField *answerField;
     __weak id <AskerViewControllerDelegate> delegate;
+    AVAudioPlayer *player;
+    AVAudioRecorder *recorder;
 }
 
 @property (copy) NSString *question;
@@ -26,8 +29,14 @@
 
 @property (nonatomic, weak) id <AskerViewControllerDelegate> delegate;
 
+- (IBAction)done;
+- (IBAction)record;
+
 @end
 
 @protocol AskerViewControllerDelegate
-- (void)askerViewController:(AskerViewController *)sender didAskQuestion:(NSString *)question andGotAnswer:(NSString *)answer;
+- (void)askerViewController:(AskerViewController *)sender
+             didAskQuestion:(NSString *)question
+               andGotAnswer:(NSString *)answer
+                  withAudio:(AVAudioPlayer *)answerAudio;
 @end
